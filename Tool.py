@@ -7,7 +7,7 @@ class Tool:
     #删除超链接标签
     removeAddr = re.compile('<a.*?>|</a>')
     #把换行的标签换为\n
-    replaceLine = re.compile('<tr>|<div>|</div>|</p>')
+    replaceLine = re.compile('<tr>|<div>|</div>|</p>|</dd>|</dt>')
     #将表格制表<td>替换为\t
     replaceTD= re.compile('<td>')
     #把段落开头换为\n加空两格
@@ -20,7 +20,10 @@ class Tool:
     replaceGT = re.compile('&gt;')
     #将其余标签剔除
     removeExtraTag = re.compile('<.*?>')
+	#删除展开全部
+    removeZKQB = re.compile('展开全部')
     def replace(self,x):
+        x = re.sub(self.removeZKQB,"",x)
         x = re.sub(self.removeImg,"",x)
         x = re.sub(self.removeAddr,"",x)
         x = re.sub(self.replaceLine,"\n",x)
