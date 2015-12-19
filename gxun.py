@@ -31,8 +31,8 @@ class Lecture:
 		self.addr = ""
 		self.url = ""
 
-#清华大学慕课平台
-class tsinghua:
+#广西民族大学慕课平台
+class gxun:
 	
 	def __init__(self):
 		self.tool = Tool.Tool()
@@ -51,7 +51,7 @@ class tsinghua:
 				
 	def getContent(self):
 		try:
-			url = 'http://tsinghua.xuetangx.com/courses/microsite'
+			url = 'http://gxun.xuetangx.com/courses/microsite'
 			request = urllib2.Request(url)
 			response = urllib2.urlopen(request)
 			return response.read().decode('utf-8')
@@ -144,12 +144,12 @@ class tsinghua:
 		content = json.loads(self.getContent())
 		conn = MysqlHelper.connect()
 		cur = conn.cursor()
-		cur.execute('drop table if exists tsinghua')
-		cur.execute('create table if not exists tsinghua(id int(11) primary key auto_increment,title varchar(255),lesson_code varchar(255),start_time varchar(255),current_sem varchar(255),spend_time varchar(255),short_desc text,knowledge_res text,chapter_info text,common_prob text,teacher_info text,url varchar(255))')
-		sql = 'insert into tsinghua(title,lesson_code,start_time,current_sem,spend_time,short_desc,knowledge_res,chapter_info,common_prob,teacher_info,url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+		cur.execute('drop table if exists gxun')
+		cur.execute('create table if not exists gxun(id int(11) primary key auto_increment,title varchar(255),lesson_code varchar(255),start_time varchar(255),current_sem varchar(255),spend_time varchar(255),short_desc text,knowledge_res text,chapter_info text,common_prob text,teacher_info text,url varchar(255))')
+		sql = 'insert into gxun(title,lesson_code,start_time,current_sem,spend_time,short_desc,knowledge_res,chapter_info,common_prob,teacher_info,url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
 		for item in content["course"]:
 			oneline = Course()
-			url = "http://tsinghua.xuetangx.com" + item["about"]
+			url = "http://gxun.xuetangx.com" + item["about"]
 			page = self.getPage(url)
 			title = self.getTitle(page)
 			oneline.title = title
@@ -195,12 +195,12 @@ class tsinghua:
 			value.append(oneline.url)
 			MysqlHelper.insert_one(cur,sql,value)
 		if content["lecture"]:
-			cur.execute('drop table if exists tsinghua_lecture')
-			cur.execute('create table if not exists tsinghua_lecture(id int(11) primary key auto_increment,title varchar(255),intro text,guest text,video_info text,addr text,url varchar(255))')
-			sql = 'insert into tsinghua_lecture(title,intro,guest,video_info,addr,url) values(%s,%s,%s,%s,%s,%s)'
+			cur.execute('drop table if exists gxun_lecture')
+			cur.execute('create table if not exists gxun_lecture(id int(11) primary key auto_increment,title varchar(255),intro text,guest text,video_info text,addr text,url varchar(255))')
+			sql = 'insert into gxun_lecture(title,intro,guest,video_info,addr,url) values(%s,%s,%s,%s,%s,%s)'
 			for item in content["lecture"]:
 				oneline = Lecture()
-				url = "http://tsinghua.xuetangx.com" + item["about"]
+				url = "http://gxun.xuetangx.com" + item["about"]
 				page = self.getPage(url)
 				title = self.getLectureTitle(page)
 				oneline.title = title
@@ -223,5 +223,5 @@ class tsinghua:
 				MysqlHelper.insert_one(cur,sql,value)		
 		MysqlHelper.finish(conn)
 		
-tsinghua = tsinghua()
-tsinghua.start()
+gxun = gxun()
+gxun.start()
